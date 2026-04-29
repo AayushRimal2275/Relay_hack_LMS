@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import generics
 from apps.accounts.models import LearnerProfile
 from .serializers import TalentPoolSerializer
@@ -22,7 +23,6 @@ class TalentPoolListView(generics.ListAPIView):
 
         search = self.request.query_params.get('search')
         if search:
-            from django.db.models import Q
             qs = qs.filter(
                 Q(user__first_name__icontains=search) |
                 Q(user__last_name__icontains=search) |

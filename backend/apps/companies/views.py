@@ -1,5 +1,5 @@
 from rest_framework import generics, mixins, permissions, status, viewsets
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.response import Response
 
 from .models import Application, Company, JobPosting
@@ -102,7 +102,6 @@ class ApplicationViewSet(
             raise PermissionDenied("Employer accounts cannot apply to jobs.")
         job = serializer.validated_data['job']
         if Application.objects.filter(learner=user, job=job).exists():
-            from rest_framework.exceptions import ValidationError
             raise ValidationError("You have already applied to this job.")
         serializer.save(learner=user)
 
