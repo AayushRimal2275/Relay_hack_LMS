@@ -16,32 +16,33 @@ export default function LoginPage() {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    try {
-      const { data } = await login(form.email, form.password);
-      // Try to get company info
-      localStorage.setItem('access_token', data.access);
-      localStorage.setItem('refresh_token', data.refresh);
-      try {
-        const companyRes = await getMyCompany();
-        if (companyRes.data && companyRes.data.length > 0) {
-          const company = companyRes.data[0];
-          data.name = company.name;
-          data.company_id = company.id;
-        }
-      } catch {}
-      storeLogin(data);
-      navigate('/dashboard');
-    } catch (err) {
-      const msg = err.response?.data?.detail || err.response?.data?.non_field_errors?.[0] || 'Invalid credentials';
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
+  e.preventDefault();
 
+  setLoading(true);
+  setError('');
+
+  try {
+    // FAKE USER (bypass backend completely)
+    const fakeUser = {
+      access: 'fake-token',
+      refresh: 'fake-refresh',
+      email: form.email,
+      name: 'Test User',
+      company_id: 1,
+    };
+
+    localStorage.setItem('access_token', fakeUser.access);
+    localStorage.setItem('refresh_token', fakeUser.refresh);
+
+    storeLogin(fakeUser);
+
+    navigate('/dashboard');
+  } catch (err) {
+    setError('Something went wrong');
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center p-4">
       <div className="w-full max-w-md">
