@@ -47,7 +47,11 @@ class JobPostingViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
-        return JobPosting.objects.select_related('company').filter(is_active=True)
+        queryset = JobPosting.objects.select_related('company')
+        # Only filter active jobs for list action; allow update/delete on inactive jobs
+        if self.action == 'list' and not self.request.query_params.get('include_inactive'):
+            queryset = queryset.filter(is_active=True)
+        return queryset
 
     def perform_create(self, serializer):
         try:

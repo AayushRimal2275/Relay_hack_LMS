@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.companies',
     'apps.talent_pool',
+    'apps.administration',
 ]
 
 MIDDLEWARE = [
@@ -61,9 +62,9 @@ WSGI_APPLICATION = 'leapfrog_connect.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'leapfrog_connect'),
+        'NAME': os.environ.get('DB_NAME', 'leapfrog'),
         'USER': os.environ.get('DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '#makichu69*'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '5432'),
     }

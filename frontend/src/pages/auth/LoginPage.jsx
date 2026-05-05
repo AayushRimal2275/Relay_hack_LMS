@@ -22,23 +22,21 @@ export default function LoginPage() {
   setError('');
 
   try {
-    // FAKE USER (bypass backend completely)
-    const fakeUser = {
-      access: 'fake-token',
-      refresh: 'fake-refresh',
-      email: form.email,
-      name: 'Test User',
-      company_id: 1,
-    };
+    const { data } = await login(form.email, form.password);
 
-    localStorage.setItem('access_token', fakeUser.access);
-    localStorage.setItem('refresh_token', fakeUser.refresh);
+    const userData = { ...data };
+    if (form.email.includes('@')) {
+      try {
+        const companyRes = await getMyCompany();
+        userData.name = companyRes.data.name;
+        userData.company_id = companyRes.data.id;
+      } catch {}
+    }
 
-    storeLogin(fakeUser);
-
+    storeLogin(userData);
     navigate('/dashboard');
   } catch (err) {
-    setError('Something went wrong');
+    setError('Invalid username or password');
   } finally {
     setLoading(false);
   }

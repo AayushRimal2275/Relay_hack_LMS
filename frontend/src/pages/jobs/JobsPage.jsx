@@ -12,16 +12,18 @@ export default function JobsPage() {
   const [editJob, setEditJob] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [showInactive, setShowInactive] = useState(false);
 
   const fetchJobs = async () => {
     try {
-      const { data } = await getJobs();
+      const params = showInactive ? { include_inactive: true } : {};
+      const { data } = await getJobs(params);
       setJobs(Array.isArray(data) ? data : data.results || []);
     } catch {}
     setLoading(false);
   };
 
-  useEffect(() => { fetchJobs(); }, []);
+  useEffect(() => { fetchJobs(); }, [showInactive]);
 
   const handleOpen = (job = null) => { setEditJob(job); setModalOpen(true); };
   const handleClose = () => { setEditJob(null); setModalOpen(false); };
@@ -54,12 +56,20 @@ export default function JobsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Job Postings</h1>
-          <p className="text-gray-400 text-sm mt-1">{jobs.length} job{jobs.length !== 1 ? 's' : ''} posted</p>
-        </div>
+        <h1 className="text-2xl font-bold text-white">Job Postings</h1>
+        <p className="text-gray-400 text-sm mt-1">{jobs.length} job{jobs.length !== 1 ? 's' : ''} posted</p>
+      </div>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => setShowInactive(!showInactive)}
+          className="text-sm text-gray-400 hover:text-white transition-colors"
+        >
+          {showInactive ? 'Hide' : 'Show'} inactive
+        </button>
         <Button onClick={() => handleOpen()} size="md">
           <Plus size={16} /> Post New Job
         </Button>
+      </div>
       </div>
 
       {jobs.length === 0 ? (
