@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'apps.companies',
     'apps.talent_pool',
     'apps.administration',
+    'apps.prospect',
 ]
 
 MIDDLEWARE = [
